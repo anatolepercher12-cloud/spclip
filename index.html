@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPClip : tes vidéos sans visage en 1 clic</title>
+<meta name="description" content="Tape un sujet, SPClip écrit le script, ajoute la voix off, anime et monte ta vidéo pour TikTok, Reels et YouTube Shorts. En français.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0B12; --bg2: #13131D; --line: #24243A; --ink: #F4F4F7; --ink2: #A9A9BC;
+    --accent: #8B5CF6; --accent2: #22C55E; --radius: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, .logo { font-family: 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.08; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  header { position: sticky; top: 0; z-index: 10; background: rgba(11,11,18,.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-size: 24px; font-weight: 800; text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; border: 0; border-radius: 999px; padding: 12px 22px; font-size: 16px; cursor: pointer; transition: transform .15s, background .15s; }
+  .btn:hover { background: #7C4CE8; transform: translateY(-1px); }
+  .btn.small { padding: 9px 18px; font-size: 15px; }
+
+  .hero { padding: 72px 0 56px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+  .tag { display: inline-block; font-size: 14px; font-weight: 600; color: var(--accent2); background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); padding: 5px 12px; border-radius: 999px; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 800; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p.lead { color: var(--ink2); font-size: 19px; margin: 20px 0 28px; max-width: 34em; }
+  .phone { justify-self: center; width: min(320px, 80vw); aspect-ratio: 9/16; border-radius: 34px; border: 8px solid #26263A; overflow: hidden; background: #000; box-shadow: 0 30px 80px rgba(139,92,246,.25); position: relative; }
+  .phone video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .phone .sound { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.65); color: #fff; border: 0; border-radius: 999px; padding: 8px 14px; font: 600 14px Inter, sans-serif; cursor: pointer; }
+  .caption { text-align: center; color: var(--ink2); font-size: 14px; margin-top: 12px; }
+
+  section { padding: 64px 0; }
+  section h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 800; margin-bottom: 12px; }
+  section .sub { color: var(--ink2); margin-bottom: 36px; max-width: 40em; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .card { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+  .card .num { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); font-weight: 700; margin-bottom: 16px; }
+  .card h3 { font-size: 22px; margin-bottom: 8px; }
+  .card p { color: var(--ink2); font-size: 16px; }
+
+  .for { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .for .card h3 { font-size: 19px; }
+
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch; }
+  .price { display: flex; flex-direction: column; }
+  .price.best { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .price .amount { font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 800; margin: 8px 0 2px; }
+  .price .amount small { font-size: 17px; color: var(--ink2); font-weight: 500; }
+  .price ul { list-style: none; margin: 18px 0 0; color: var(--ink2); font-size: 16px; }
+  .price li { padding: 5px 0 5px 26px; position: relative; }
+  .price li::before { content: '✓'; position: absolute; left: 0; color: var(--accent2); font-weight: 700; }
+  .badge { align-self: flex-start; font-size: 13px; font-weight: 600; background: var(--accent); padding: 3px 10px; border-radius: 999px; margin-bottom: 6px; }
+  .note { color: var(--ink2); font-size: 14px; margin-top: 16px; }
+
+  .join { background: linear-gradient(135deg, rgba(139,92,246,.18), rgba(34,197,94,.08)); border: 1px solid var(--line); border-radius: 28px; padding: 48px 28px; text-align: center; }
+  .join h2 { margin-bottom: 10px; }
+  .join p { color: var(--ink2); margin: 0 auto 26px; max-width: 34em; }
+  form { display: flex; gap: 10px; max-width: 520px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  input[type=email] { flex: 1 1 260px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 13px 20px; font: 16px Inter, sans-serif; }
+  input[type=email]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .consent { font-size: 13px; color: var(--ink2); margin-top: 14px; }
+  #msg { margin-top: 14px; font-weight: 600; min-height: 1.6em; }
+  .hp { position: absolute; left: -9999px; }
+
+  .assist { display: grid; grid-template-columns: .9fr 1.1fr; gap: 48px; align-items: center; }
+  .assist ul { list-style: none; color: var(--ink2); }
+  .assist li { padding: 7px 0 7px 30px; position: relative; }
+  .assist li::before { content: '✦'; position: absolute; left: 0; color: var(--accent); }
+  .chat { background: var(--bg2); border: 1px solid var(--line); border-radius: 22px; padding: 20px; min-height: 470px; display: flex; flex-direction: column; gap: 12px; }
+  .chat .head { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--line); font-weight: 600; }
+  .chat .av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: grid; place-items: center; font-size: 16px; }
+  .chat .head small { display: block; color: var(--accent2); font-weight: 500; font-size: 12px; }
+  .bubble { max-width: 85%; padding: 11px 15px; border-radius: 16px; font-size: 15px; line-height: 1.5; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
+  .bubble.show { opacity: 1; transform: none; }
+  .bubble.bot { background: #1E1E30; border-bottom-left-radius: 4px; }
+  .bubble.me { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
+  .bubble .opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .bubble .opts span { border: 1px solid #3A3A58; border-radius: 999px; padding: 3px 10px; font-size: 13px; }
+  .bubble .opts span.on { background: var(--accent2); border-color: var(--accent2); color: #0B0B12; font-weight: 600; }
+  .typing { display: inline-flex; gap: 4px; }
+  .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink2); animation: blink 1s infinite; }
+  .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+
+  .voices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .voice { display: flex; flex-direction: column; gap: 10px; }
+  .voice .who { display: flex; align-items: center; gap: 12px; }
+  .voice .ini { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font: 800 20px 'Bricolage Grotesque', sans-serif; flex: none; }
+  .voice h3 { font-size: 21px; }
+  .voice .kind { color: var(--ink2); font-size: 14px; }
+  .voice p { color: var(--ink2); font-size: 15px; flex: 1; }
+  .play { display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 10px; font: 600 15px Inter, sans-serif; cursor: pointer; transition: border-color .15s, background .15s; }
+  .play:hover { border-color: var(--accent); }
+  .play.on { background: var(--accent); border-color: var(--accent); }
+
+  @media (max-width: 860px) {
+    .assist { grid-template-columns: 1fr; gap: 28px; }
+    .voices { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) { .voices { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .bubble { transition: none; } .typing i { animation: none; opacity: .6; } }
+
+  .faq details { background: var(--bg2); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; margin-bottom: 12px; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq details p { color: var(--ink2); margin-top: 10px; }
+
+  footer { border-top: 1px solid var(--line); padding: 32px 0; color: var(--ink2); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 860px) {
+    .hero .wrap { grid-template-columns: 1fr; gap: 40px; }
+    .hero { padding-top: 44px; }
+    .steps, .pricing { grid-template-columns: 1fr; }
+    .for { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) { .for { grid-template-columns: 1fr; } .join { padding: 36px 18px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">SP<span>Clip</span></a>
+    <a class="btn small" href="#rejoindre">Liste d'attente</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="tag">Bientôt disponible · 100 % en français</span>
+        <h1>Tes vidéos <em>sans visage</em>, prêtes en 1 clic.</h1>
+        <p class="lead">Discute avec l'assistant SPClip : il t'aide à trouver ton sujet, écrit le script, choisit avec toi la voix off et monte ta vidéo pour TikTok, Reels et YouTube Shorts. Tu n'as plus qu'à publier.</p>
+        <a class="btn" href="#rejoindre">Rejoindre la liste d'attente</a>
+      </div>
+      <div>
+        <div class="phone">
+          <video id="demo" src="media/demo.mp4" poster="media/demo.jpg" autoplay muted loop playsinline></video>
+          <button class="sound" id="sound" type="button">🔊 Activer le son</button>
+        </div>
+        <p class="caption">Exemple du type de vidéo que SPClip va créer</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Comment ça marche</h2>
+      <p class="sub">Pas de caméra, pas de micro, pas de logiciel de montage.</p>
+      <div class="steps">
+        <div class="card"><div class="num">1</div><h3>Tu discutes avec l'assistant</h3><p>Il te demande ton sujet, ton public, le ton voulu, et te propose plusieurs accroches.</p></div>
+        <div class="card"><div class="num">2</div><h3>Tu choisis ta voix</h3><p>Rémy, Henri, Vivienne ou Denise. L'assistant écrit le script, anime le texte, ajoute sous-titres et musique.</p></div>
+        <div class="card"><div class="num">3</div><h3>Tu publies</h3><p>Vidéo verticale 1080×1920 prête pour TikTok, Instagram Reels et YouTube Shorts.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap assist">
+      <div>
+        <span class="tag">Ton assistant IA</span>
+        <h2>Tu n'es jamais seul devant ta vidéo.</h2>
+        <p class="sub">L'assistant SPClip t'accompagne du début à la fin, comme un monteur qui te connaît.</p>
+        <ul>
+          <li>Il t'aide à trouver un sujet qui marche</li>
+          <li>Il te propose 3 accroches et tu choisis</li>
+          <li>Il vérifie les chiffres et le rythme</li>
+          <li>Tu lui demandes un changement, il refait la vidéo</li>
+        </ul>
+      </div>
+      <div class="chat" id="chat" aria-label="Exemple de conversation avec l'assistant">
+        <div class="head"><div class="av">✦</div><div>Assistant SPClip<small>● en ligne</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voix">
+    <div class="wrap">
+      <h2>Choisis ta voix off</h2>
+      <p class="sub">Des voix françaises naturelles, qui prononcent bien les chiffres. Clique pour écouter.</p>
+      <div class="voices">
+        <div class="card voice"><div class="who"><div class="ini" style="background:#8B5CF6">R</div><div><h3>Rémy</h3><span class="kind">Homme · dynamique</span></div></div><p>Pour les astuces et les vidéos qui vont vite.</p><button class="play" data-src="media/voix-remy.mp3" type="button">▶ Écouter</button></div>
+        <div class="card voice"><div class="who"><div class="ini" style="background:#3B82F6">H</div><div><h3>Henri</h3><span class="kind">Homme · posé</span></div></div><p>Pour expliquer clairement, en confiance.</p><button class="play" data-src="media/voix-henri.mp3" type="button">▶ Écouter</button></div>
+        <div class="card voice"><div class="who"><div class="ini" style="background:#EC4899">V</div><div><h3>Vivienne</h3><span class="kind">Femme · énergique</span></div></div><p>Pour accrocher dès la première seconde.</p><button class="play" data-src="media/voix-vivienne.mp3" type="button">▶ Écouter</button></div>
+        <div class="card voice"><div class="who"><div class="ini" style="background:#22C55E">D</div><div><h3>Denise</h3><span class="kind">Femme · chaleureuse</span></div></div><p>Pour raconter des histoires en douceur.</p><button class="play" data-src="media/voix-denise.mp3" type="button">▶ Écouter</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Pour qui ?</h2>
+      <p class="sub">Pour tous ceux qui veulent poster tous les jours sans y passer leurs soirées.</p>
+      <div class="for">
+        <div class="card"><h3>Chaînes sans visage</h3><p>Astuces, faits insolites, finances : une vidéo par jour sans te montrer.</p></div>
+        <div class="card"><h3>Commerçants</h3><p>Présente tes produits et tes offres en vidéo, sans agence.</p></div>
+        <div class="card"><h3>Créateurs</h3><p>Transforme tes idées en vidéos et garde ton énergie pour le reste.</p></div>
+        <div class="card"><h3>Formateurs</h3><p>Explique une notion en 30 secondes, avec les chiffres qui s'animent.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Tarifs prévus</h2>
+      <p class="sub">Les inscrits de la liste d'attente auront un tarif de lancement réservé.</p>
+      <div class="pricing">
+        <div class="card price">
+          <h3>Essai</h3>
+          <div class="amount">0 €</div>
+          <ul><li>3 vidéos pour tester</li><li>Toutes les voix</li><li>Petit filigrane SPClip</li></ul>
+        </div>
+        <div class="card price">
+          <h3>Mensuel</h3>
+          <div class="amount">9,99 € <small>/ mois</small></div>
+          <ul><li>30 vidéos par mois</li><li>Sans filigrane</li><li>Sans engagement</li></ul>
+        </div>
+        <div class="card price best">
+          <span class="badge">2 mois offerts</span>
+          <h3>Annuel</h3>
+          <div class="amount">79 € <small>/ an</small></div>
+          <ul><li>30 vidéos par mois</li><li>Sans filigrane</li><li>Les nouveautés en premier (vidéos d'animation)</li></ul>
+        </div>
+      </div>
+      <p class="note">Tarifs indicatifs, susceptibles d'évoluer avant l'ouverture.</p>
+    </div>
+  </section>
+
+  <section id="rejoindre">
+    <div class="wrap">
+      <div class="join">
+        <h2>Sois parmi les premiers</h2>
+        <p>Laisse ton e-mail : tu seras prévenu à l'ouverture et tu auras le tarif de lancement.</p>
+        <form id="waitlist" novalidate>
+          <input type="email" name="email" placeholder="ton@email.fr" required autocomplete="email" aria-label="Adresse e-mail">
+          <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn" type="submit">Je m'inscris</button>
+        </form>
+        <p id="msg" role="status"></p>
+        <p class="consent">Ton e-mail sert uniquement à te prévenir du lancement de SPClip. Pas de spam, désinscription en un clic.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <h2>Questions</h2>
+      <details><summary>C'est quand, l'ouverture ?</summary><p>SPClip est en cours de construction. Les inscrits sont prévenus en premier, par e-mail.</p></details>
+      <details><summary>Je dois montrer mon visage ou parler ?</summary><p>Non. Tu choisis une voix off (Rémy, Henri, Vivienne ou Denise), le texte s'anime tout seul.</p></details>
+      <details><summary>Je n'ai jamais fait de vidéo, c'est grave ?</summary><p>Pas du tout. L'assistant te pose les bonnes questions, te propose des idées et s'occupe du montage. Tu valides, c'est tout.</p></details>
+      <details><summary>Les vidéos m'appartiennent ?</summary><p>Oui, tu peux les publier et les monétiser sur tes comptes.</p></details>
+      <details><summary>Et les vidéos d'animation ?</summary><p>Elles arrivent après le lancement : personnages, illustrations animées. Les abonnés annuels les auront en premier.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 SPClip</span>
+    <span>Fait en France</span>
+  </div>
+</footer>
+
+<script>
+  // Endpoint Formspree (https://formspree.io), à remplir après création du formulaire.
+  const FORM_ENDPOINT = '';
+
+  const video = document.getElementById('demo');
+  const sound = document.getElementById('sound');
+  sound.addEventListener('click', () => {
+    video.muted = !video.muted;
+    if (!video.muted) { video.currentTime = 0; video.play(); }
+    sound.textContent = video.muted ? '🔊 Activer le son' : '🔇 Couper le son';
+  });
+
+  // Voix : un seul extrait à la fois.
+  const player = new Audio();
+  let current = null;
+  const reset = (b) => { b.classList.remove('on'); b.textContent = '▶ Écouter'; };
+  document.querySelectorAll('.play').forEach((b) => b.addEventListener('click', () => {
+    if (current === b && !player.paused) { player.pause(); reset(b); return; }
+    if (current) reset(current);
+    video.muted = true; sound.textContent = '🔊 Activer le son';
+    player.src = b.dataset.src; player.play();
+    current = b; b.classList.add('on'); b.textContent = '❚❚ Pause';
+  }));
+  player.addEventListener('ended', () => current && reset(current));
+
+  // Démo de l'assistant : la conversation se joue quand elle arrive à l'écran.
+  const chat = document.getElementById('chat');
+  const script = [
+    ['bot', 'Salut ! Ta vidéo parle de quoi ?'],
+    ['me', 'Des astuces pour économiser quand on est étudiant'],
+    ['bot', 'Top sujet. Voici 3 accroches, laquelle tu préfères ?<div class="opts"><span>Tu perds 760 € par an sans le voir</span><span>3 erreurs qui vident ton compte</span><span>Le relevé que personne ne lit</span></div>', 0],
+    ['me', 'La première !'],
+    ['bot', 'Parfait. Quelle voix ?<div class="opts"><span class="on">Rémy</span><span>Henri</span><span>Vivienne</span><span>Denise</span></div>'],
+    ['bot', 'J\'écris le script, j\'anime les chiffres et j\'ajoute les sous-titres… ✅ Ta vidéo de 32 s est prête !'],
+  ];
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  async function play() {
+    for (const [who, html, pick] of script) {
+      if (who === 'bot' && !reduced) {
+        const t = document.createElement('div');
+        t.className = 'bubble bot show';
+        t.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+        chat.appendChild(t); await wait(900); t.remove();
+      }
+      const b = document.createElement('div');
+      b.className = 'bubble ' + who; b.innerHTML = html;
+      chat.appendChild(b);
+      requestAnimationFrame(() => b.classList.add('show'));
+      if (pick !== undefined) { await wait(reduced ? 0 : 1200); b.querySelectorAll('.opts span')[pick].classList.add('on'); }
+      await wait(reduced ? 0 : 1100);
+    }
+  }
+  new IntersectionObserver((entries, obs) => {
+    if (entries[0].isIntersecting) { obs.disconnect(); play(); }
+  }, { threshold: .35 }).observe(chat);
+
+  const form = document.getElementById('waitlist');
+  const msg = document.getElementById('msg');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'Vérifie ton adresse e-mail.'; return; }
+    if (!FORM_ENDPOINT) { msg.textContent = 'Inscriptions bientôt ouvertes !'; return; }
+    msg.textContent = 'Envoi…';
+    try {
+      const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+      if (!res.ok) throw new Error();
+      form.reset();
+      msg.textContent = "C'est noté ! Tu seras prévenu à l'ouverture.";
+    } catch {
+      msg.textContent = 'Oups, ça n’a pas marché. Réessaie dans un instant.';
+    }
+  });
+</script>
+</body>
+</html>
